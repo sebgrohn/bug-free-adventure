@@ -17,7 +17,7 @@ const spawner = new CreepSpawner(spawn && spawn.id, {
   repairer: 4,
 });
 const defender = new Defender();
-const roles = require('roles2.js');
+const roles = require('roles');
 
 module.exports.loop = function () {
   purger.run();
