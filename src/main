@@ -1,0 +1,34 @@
+'use strict';
+
+/**
+ * Imported from https://github.com/sebgrohn/bug-free-adventure
+ */
+
+const MemoryPurger = require('memory-purger');
+const CreepSpawner = require('creep-spawner');
+const Defender = require('defender');
+
+const spawn = Game.spawns['Spawn1'];
+const purger = new MemoryPurger(spawn && spawn.id);
+const spawner = new CreepSpawner(spawn && spawn.id, {
+  harvester: 10,
+  builder: 5,
+  upgrader: 6,
+  repairer: 4,
+});
+const defender = new Defender();
+const roles = require('roles2.js');
+
+module.exports.loop = function () {
+  purger.run();
+  spawner.run();
+  defender.run();
+
+  for(const creepName in Game.creeps) {
+    const creep = Game.creeps[creepName];
+    const role = roles[creep.memory.role];
+    if (role) {
+      role.run(creep);
+    }
+  }
+}

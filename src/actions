@@ -1,0 +1,21 @@
+'use strict';
+
+const ActionBuild = require('action.build');
+const ActionHarvest = require('action.harvest');
+const ActionRepair = require('action.repair');
+const ActionTransfer = require('action.transfer');
+const ActionUpgrade = require('action.upgrade');
+const ActionClaim = require('action.claim');
+
+const actions = {
+  build: new ActionBuild([STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_CONTAINER, STRUCTURE_TOWER, STRUCTURE_WALL, STRUCTURE_RAMPART, STRUCTURE_ROAD]),
+
+  // TODO new action for taking energy from containers...
+  harvest: new ActionHarvest(),
+
+  repair: new ActionRepair([STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_RAMPART, STRUCTURE_WALL, STRUCTURE_TOWER, STRUCTURE_ROAD, STRUCTURE_CONTAINER]),
+  transfer: new ActionTransfer([STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_CONTAINER]),
+  upgrade: new ActionUpgrade(),
+  // claim: new ActionClaim(),
+};
+module.exports = actions;

@@ -1,0 +1,30 @@
+'use strict';
+
+const RoleComposite = require('role.composite');
+const actions = require('actions');
+
+const roles = {
+  builder: new RoleComposite({
+    harvest: { action: actions.harvest, nextActions: { done: 'build' } },
+    build: { action: actions.build, nextActions: { done: 'harvest', noTarget: 'repair' } },
+    repair: { action: actions.repair, nextActions: { done: 'harvest', noTarget: 'transfer' } },
+    transfer: { action: actions.transfer, nextActions: { done: 'harvest' } },
+  }),
+  harvester: new RoleComposite({
+    harvest: { action: actions.harvest, nextActions: { done: 'transfer' } },
+    transfer: { action: actions.transfer, nextActions: { done: 'harvest', noTarget: 'build' } },
+    build: { action: actions.build, nextActions: { done: 'harvest' } },
+  }),
+  repairer: new RoleComposite({
+    harvest: { action: actions.harvest, nextActions: { done: 'repair' } },
+    repair: { action: actions.repair, nextActions: { done: 'harvest', noTarget: 'build' } },
+    build: { action: actions.build, nextActions: { done: 'harvest', noTarget: 'transfer' } },
+    transfer: { action: actions.transfer, nextActions: { done: 'harvest' } },
+  }),
+  upgrader: new RoleComposite({
+    harvest: { action: actions.harvest, nextActions: { done: 'upgrade' } },
+    upgrade: { action: actions.upgrade, nextActions: { done: 'harvest', noTarget: 'transfer' } },
+    transfer: { action: actions.transfer, nextActions: { done: 'harvest' } },
+  }),
+};
+module.exports = roles;
