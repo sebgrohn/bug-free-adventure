@@ -2,7 +2,7 @@
 
 const structureTypes = [STRUCTURE_SPAWN, STRUCTURE_EXTENSION];
 
-module.exports = class CreepSpawner {
+export default class CreepSpawner {
 
   constructor(spawnId, roleWeights) {
     this._spawnId = spawnId;
@@ -68,7 +68,7 @@ module.exports = class CreepSpawner {
 
       // level 2
       350: [WORK,       CARRY, CARRY,        MOVE, MOVE, MOVE],
-      400: [WORK,       CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+      // 400: [WORK,       CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
       400: [WORK, WORK, CARRY, CARRY,        MOVE, MOVE],
       450: [WORK,       CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
       500: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE],
@@ -80,7 +80,7 @@ module.exports = class CreepSpawner {
       700: [WORK, WORK, WORK, CARRY, CARRY, CARRY,        MOVE, MOVE, MOVE, MOVE, MOVE],
       750: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
       800: [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-    }
+    };
 
     if (roleStat.count === 0) {
       return bodies[energyStats.energy - energyStats.energy % 50] || bodies[300];
@@ -108,4 +108,4 @@ module.exports = class CreepSpawner {
   _getTarget() {
     return Game.getObjectById(this._spawnId);
   }
-};
+}

@@ -1,8 +1,8 @@
 'use strict';
 
-const MemoryPurger = require('memory-purger');
-const CreepSpawner = require('creep-spawner');
-const Defender = require('defender');
+import MemoryPurger from './memory-purger.js';
+import CreepSpawner from './creep-spawner.js';
+import Defender from './defender.js';
 
 const spawn = Game.spawns['Spawn1'];
 const purger = new MemoryPurger(spawn && spawn.id);
@@ -13,9 +13,9 @@ const spawner = new CreepSpawner(spawn && spawn.id, {
   repairer: 4,
 });
 const defender = new Defender();
-const roles = require('roles');
+import roles from './roles.js';
 
-module.exports.loop = function () {
+export function loop () {
   purger.run();
   spawner.run();
   defender.run();

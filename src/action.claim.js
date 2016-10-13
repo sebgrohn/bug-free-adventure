@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class ActionClaim {
+export default class ActionClaim {
 
   constructor() {
   }
@@ -8,4 +8,4 @@ module.exports = class ActionClaim {
   run(creep) {
     return 'done';
   }
-};
+}

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class Defender {
+export default class Defender {
 
   constructor() {
   }
@@ -21,4 +21,4 @@ module.exports = class Defender {
       }
     }
   }
-};
+}

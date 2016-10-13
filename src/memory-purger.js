@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class MemoryPurger {
+export default class MemoryPurger {
 
   constructor(spawnId) {
     this._spawnId = spawnId;
@@ -23,4 +23,4 @@ module.exports = class MemoryPurger {
   _getTarget() {
     return Game.getObjectById(this._spawnId);
   }
-};
+}
