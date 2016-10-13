@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Imported from https://github.com/sebgrohn/bug-free-adventure
- */
-
 const MemoryPurger = require('memory-purger');
 const CreepSpawner = require('creep-spawner');
 const Defender = require('defender');
