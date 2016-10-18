@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class ActionRepair {
+export default class ActionBuild {
 
   constructor(defaultStructureTypes = undefined) {
     this._defaultStructureTypes = defaultStructureTypes || [];
@@ -13,7 +13,7 @@ module.exports = class ActionRepair {
       return 'noTarget';
     }
 
-    const status = creep.repair(target);
+    const status = creep.build(target);
     switch (status) {
       case ERR_NOT_IN_RANGE:
         if (creep.moveTo(target) === ERR_NO_PATH) {
@@ -35,18 +35,17 @@ module.exports = class ActionRepair {
   }
 
   _getTarget(creep) {
-    if (!creep.memory.repair_structureTypes) {
-      creep.memory.repair_structureTypes = this._defaultStructureTypes;
+    if (!creep.memory.build_structureTypes) {
+      creep.memory.build_structureTypes = this._defaultStructureTypes;
     }
 
     if (!creep.memory.targetId) {
-      const targets = creep.room.find(FIND_STRUCTURES, {
-        filter: structure => (creep.memory.repair_structureTypes.length === 0
-            || creep.memory.repair_structureTypes.indexOf(structure.structureType) !== -1)
-          && structure.hits < structure.hitsMax && structure.hits < 125000,
+      const targets = creep.room.find(FIND_CONSTRUCTION_SITES, {
+        filter: structure => creep.memory.build_structureTypes.length === 0
+          || creep.memory.build_structureTypes.indexOf(structure.structureType) !== -1,
       });
       creep.memory.targetId = _(targets)
-        .sortBy(structure => creep.memory.repair_structureTypes.indexOf(structure.structureType), structure => structure.pos.getRangeTo(creep))
+        .sortBy(structure => creep.memory.build_structureTypes.indexOf(structure.structureType), structure => structure.pos.getRangeTo(creep))
         .map(structure => structure.id)
         .head();
       console.log(`Creep ${creep.name}: selected target at ${(Game.getObjectById(creep.memory.targetId) || {}).pos}`);
@@ -61,4 +60,4 @@ module.exports = class ActionRepair {
   _clearTarget(creep) {
     delete creep.memory.targetId;
   }
-};
+}

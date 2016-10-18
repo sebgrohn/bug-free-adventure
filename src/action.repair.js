@@ -1,9 +1,9 @@
 'use strict';
 
-module.exports = class ActionTransfer {
+export default class ActionRepair {
 
-  constructor(structureTypes = undefined) {
-    this._structureTypes = structureTypes || [];
+  constructor(defaultStructureTypes = undefined) {
+    this._defaultStructureTypes = defaultStructureTypes || [];
   }
 
   run(creep) {
@@ -13,7 +13,7 @@ module.exports = class ActionTransfer {
       return 'noTarget';
     }
 
-    const status = creep.transfer(target, RESOURCE_ENERGY);
+    const status = creep.repair(target);
     switch (status) {
       case ERR_NOT_IN_RANGE:
         if (creep.moveTo(target) === ERR_NO_PATH) {
@@ -22,9 +22,9 @@ module.exports = class ActionTransfer {
         }
         break;
 
-      case ERR_FULL:
+      case ERR_INVALID_TARGET:
         this._clearTarget(creep);
-        creep.say('filled');
+        creep.say('invalid');
         break;
     }
 
@@ -35,15 +35,18 @@ module.exports = class ActionTransfer {
   }
 
   _getTarget(creep) {
+    if (!creep.memory.repair_structureTypes) {
+      creep.memory.repair_structureTypes = this._defaultStructureTypes;
+    }
+
     if (!creep.memory.targetId) {
       const targets = creep.room.find(FIND_STRUCTURES, {
-        filter: structure => (this._structureTypes.length === 0
-            || this._structureTypes.indexOf(structure.structureType) !== -1)
-          && (structure.energy < structure.energyCapacity
-            || (structure.store && _.sum(structure.store) < structure.storeCapacity)),
+        filter: structure => (creep.memory.repair_structureTypes.length === 0
+            || creep.memory.repair_structureTypes.indexOf(structure.structureType) !== -1)
+          && structure.hits < structure.hitsMax && structure.hits < 125000,
       });
       creep.memory.targetId = _(targets)
-        .sortBy(structure => this._structureTypes.indexOf(structure.structureType))
+        .sortBy(structure => creep.memory.repair_structureTypes.indexOf(structure.structureType), structure => structure.pos.getRangeTo(creep))
         .map(structure => structure.id)
         .head();
       console.log(`Creep ${creep.name}: selected target at ${(Game.getObjectById(creep.memory.targetId) || {}).pos}`);
@@ -58,4 +61,4 @@ module.exports = class ActionTransfer {
   _clearTarget(creep) {
     delete creep.memory.targetId;
   }
-};
+}

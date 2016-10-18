@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = class ActionHarvest {
+export default class ActionTransfer {
 
-  constructor() {
+  constructor(structureTypes = undefined) {
+    this._structureTypes = structureTypes || [];
   }
 
   run(creep) {
@@ -12,7 +13,7 @@ module.exports = class ActionHarvest {
       return 'noTarget';
     }
 
-    const status = creep.harvest(target);
+    const status = creep.transfer(target, RESOURCE_ENERGY);
     switch (status) {
       case ERR_NOT_IN_RANGE:
         if (creep.moveTo(target) === ERR_NO_PATH) {
@@ -21,9 +22,9 @@ module.exports = class ActionHarvest {
         }
         break;
 
-      case ERR_NOT_ENOUGH_RESOURCES:
+      case ERR_FULL:
         this._clearTarget(creep);
-        creep.say('emptied');
+        creep.say('filled');
         break;
     }
 
@@ -35,18 +36,26 @@ module.exports = class ActionHarvest {
 
   _getTarget(creep) {
     if (!creep.memory.targetId) {
-      const sources = creep.room.find(FIND_SOURCES);
-      creep.memory.targetId = sources[Math.floor(Math.random() * sources.length)].id;
+      const targets = creep.room.find(FIND_STRUCTURES, {
+        filter: structure => (this._structureTypes.length === 0
+            || this._structureTypes.indexOf(structure.structureType) !== -1)
+          && (structure.energy < structure.energyCapacity
+            || (structure.store && _.sum(structure.store) < structure.storeCapacity)),
+      });
+      creep.memory.targetId = _(targets)
+        .sortBy(structure => this._structureTypes.indexOf(structure.structureType))
+        .map(structure => structure.id)
+        .head();
       console.log(`Creep ${creep.name}: selected target at ${(Game.getObjectById(creep.memory.targetId) || {}).pos}`);
     }
     return Game.getObjectById(creep.memory.targetId);
   }
 
   _isDone(creep) {
-    return creep.carry.energy === creep.carryCapacity;
+    return creep.carry.energy === 0;
   }
 
   _clearTarget(creep) {
     delete creep.memory.targetId;
   }
-};
+}

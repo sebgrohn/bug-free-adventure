@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class RoleComposite {
+export default class RoleComposite {
 
   constructor(actions) {
     this._actions = actions;
@@ -38,4 +38,4 @@ module.exports = class RoleComposite {
     creep.memory.action = nextAction;
     creep.say(nextAction);
   }
-};
+}

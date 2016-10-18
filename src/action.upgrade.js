@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class ActionUpgrade {
+export default class ActionUpgrade {
 
   constructor() {
   }
@@ -44,4 +44,4 @@ module.exports = class ActionUpgrade {
   _isDone(creep) {
     return creep.carry.energy === 0;
   }
-};
+}

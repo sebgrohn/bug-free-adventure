@@ -1,7 +1,7 @@
 'use strict';
 
-const RoleComposite = require('role.composite');
-const actions = require('actions');
+import RoleComposite from './role.composite.js';
+import actions from './actions.js';
 
 const roles = {
   builder: new RoleComposite({
@@ -27,4 +27,4 @@ const roles = {
     transfer: { action: actions.transfer, nextActions: { done: 'harvest' } },
   }),
 };
-module.exports = roles;
+export default roles;
