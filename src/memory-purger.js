@@ -2,25 +2,15 @@
 
 export default class MemoryPurger {
 
-  constructor(spawnId) {
-    this._spawnId = spawnId;
+  constructor() {
   }
 
   run() {
-    this._clearNonexistingCreeps();
-  }
-
-  _clearNonexistingCreeps() {
-    const spawn = this._getTarget();
     for(const name in Memory.creeps) {
-      if(!Game.creeps[name] && (!spawn.spawning || spawn.spawning.name !== name)) {
+      if(!Game.creeps[name]) {
         console.log(`Clearing non-existing creep memory: ${name} (${Memory.creeps[name].role})`);
         delete Memory.creeps[name];
       }
     }
-  }
-
-  _getTarget() {
-    return Game.getObjectById(this._spawnId);
   }
 }

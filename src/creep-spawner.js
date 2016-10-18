@@ -4,28 +4,25 @@ const structureTypes = [STRUCTURE_SPAWN, STRUCTURE_EXTENSION];
 
 export default class CreepSpawner {
 
-  constructor(spawnId, roleWeights) {
-    this._spawnId = spawnId;
+  constructor(roleWeights) {
     this._roleWeights = roleWeights;
   }
 
-  run() {
-    const energyStats = this._getEnergyStats();
+  run(spawn) {
+    const energyStats = this._getEnergyStats(spawn);
     const roleStats = this._getRoleStats();
     // console.log(JSON.stringify(roleStats));
     for (const roleStat of roleStats) {
       const { role, count, quota, targetQuota } = roleStat;
       // console.log(role, count, quota, targetQuota, targetQuota - quota);
       const body = this._getBody(role, energyStats, roleStat);
-      if (this._trySpawn(role, body)) {
+      if (this._trySpawn(spawn, role, body)) {
         break;
       }
     }
   }
 
-  _getEnergyStats() {
-    const spawn = this._getTarget();
-
+  _getEnergyStats(spawn) {
     const structures = spawn.room.find(FIND_STRUCTURES, {
       filter: structure => structureTypes.indexOf(structure.structureType) !== -1,
     });
@@ -89,9 +86,7 @@ export default class CreepSpawner {
     }
   }
 
-  _trySpawn(role, body) {
-    const spawn = this._getTarget();
-
+  _trySpawn(spawn, role, body) {
     if (spawn.canCreateCreep(body) === OK && !spawn.spawning) {
       const highestCreepIndex = _(Game.creeps)
         .filter(creep => creep.name.match(role))
@@ -103,9 +98,5 @@ export default class CreepSpawner {
       return true;
     }
     return false;
-  }
-
-  _getTarget() {
-    return Game.getObjectById(this._spawnId);
   }
 }

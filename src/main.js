@@ -4,9 +4,8 @@ import MemoryPurger from './memory-purger.js';
 import CreepSpawner from './creep-spawner.js';
 import Defender from './defender.js';
 
-const spawn = Game.spawns['Spawn1'];
-const purger = new MemoryPurger(spawn && spawn.id);
-const spawner = new CreepSpawner(spawn && spawn.id, {
+const purger = new MemoryPurger();
+const spawner = new CreepSpawner({
   harvester: 10,
   builder: 5,
   upgrader: 6,
@@ -17,7 +16,12 @@ import roles from './roles.js';
 
 export function loop () {
   purger.run();
-  spawner.run();
+
+  for (const spawnName in Game.spawns) {
+    const spawn = Game.spawns[spawnName];
+    spawner.run(spawn);
+  }
+
   defender.run();
 
   for(const creepName in Game.creeps) {
