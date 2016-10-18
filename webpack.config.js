@@ -3,12 +3,13 @@
 const webpackConfig = {
   entry: ['babel-polyfill', './src/main.js'],
   output: {
-    filename: './dist/main.js',
+    filename: './main.js',
     pathinfo: true,
     libraryTarget: 'commonjs2',
   },
 
   target: 'node',
+  devtool: 'source-map',
 
   node: {
     console: true,
