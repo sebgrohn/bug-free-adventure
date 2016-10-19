@@ -37,11 +37,11 @@ export default class ActionUpgrade {
     }
   }
 
-  _getTarget(creep) {
-    return creep.room.controller;
-  }
-
   _isDone(creep) {
     return creep.carry.energy === 0;
+  }
+
+  _clearTarget(creep) {
+    delete creep.memory.targetId;
   }
 }
